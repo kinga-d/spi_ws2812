@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <locale.h>
+
 
 	/* ************
 
@@ -241,6 +243,7 @@ int main(void){
 	sendColor();
 
 	sendColor();
+
 
 
 	sendColor();
