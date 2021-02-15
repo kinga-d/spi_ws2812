@@ -58,6 +58,8 @@ uint8_t ledHigh = 0b11110000; 	// 0b11110000   logic "1" for WS2812b diode (byte
 
 uint8_t resetBuffer[50];
 
+
+
 char blueBin[8];
 uint8_t blue[8];
 char greenBin[8];
@@ -116,15 +118,71 @@ void gpioConfig (void){
 	GPIOA->OSPEEDR |= 0;
 }
 
-void setReset(void){
-    for (int i=0; i<resetNumber; i++){
-        resetBuffer[i]=logicZero;
-    }
+
+
+void sendReset(void){
+
     for (int i=0; i<resetNumber; i++){
         spiSend(resetBuffer[i]);
     }
 }
 
+struct Color
+{
+    uint8_t red[8];
+    uint8_t green[8];
+    uint8_t blue[8];
+};
+
+struct Color setColor(char *R, char *G, char *B) {
+
+    struct Color newColor;
+
+    for (int i=0, j = 0; i<8; i++){
+            if(R[i] == '1'){
+                newColor.red[j] = ledHigh;
+            }
+            else newColor.red[j] = ledLow;
+            j++;}
+
+    for (int i=0, j = 0; i<8; i++){
+            if(G[i] == '1'){
+                newColor.green[j] = ledHigh;
+            }
+            else newColor.green[j] = ledLow;
+            j++;}
+
+    for (int i=0, j = 0; i<8; i++){
+            if(B[i] == '1'){
+                newColor.blue[j] = ledHigh;
+            }
+            else newColor.blue[j] = ledLow;
+            j++;}
+
+    return newColor;
+}
+
+int sendColor(struct Color newColor){
+
+for (int i=0; i<8; i++){
+    spiSend(newColor.green[i]);
+    }
+printf("\n");
+
+for (int i=0; i<8; i++){
+	spiSend(newColor.red[i]);
+    }
+printf("\n");
+
+for (int i=0; i<8; i++){
+	spiSend(newColor.blue[i]);
+      }
+printf("\n");
+
+return 0;
+}
+
+/*
 void setRed(char redDec){
 
 	//set Red
@@ -222,9 +280,13 @@ void sendColor(){
 
 		for (int i=0;i<8;i++){
 			spiSend(blue[i]);
-		}}
+		}}*/
 
 int main(void){
+
+	for(int i=0; i<resetNumber; i++){
+	      resetBuffer[i]=logicZero;
+	    }
 
 	sysClockConfig();
 
@@ -234,29 +296,125 @@ int main(void){
 
 	spiConfig();
 
-	//for (int i=0; i<20; i++){
-//}
+	struct Color lightpink = setColor("00101001", "11110111", "00011110");
+	struct Color darkpink = setColor("00111110", "00011110", "11110111");
+	struct Color turnedOff = setColor("00000000", "00000000", "00000000");
+
 	while(1)
 	{
-	setColor(0, 255, 0); //set RGB
 
-	sendColor();
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendReset();
+		Delay_ms(50);
 
-	sendColor();
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(lightpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
+
+		for(int i=0;i<5;i++){
+		sendColor(turnedOff);}
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendColor(lightpink);
+		sendReset();
+		Delay_ms(50);
+
+		for(int i=0;i<5;i++){
+		sendColor(turnedOff);}
+		sendReset();
+		Delay_ms(50);
+
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendColor(darkpink);
+		sendReset();
+		Delay_ms(50);
 
 
-
-	sendColor();
-
-	for (int i=0;i<resetNumber;i++){
-		spiSend(resetBuffer[i]);}
-	//Delay_ms(200);
-
-	//sendColor();
-	//sendColor();
-
-	//for (int i=0;i<resetNumber;i++){
-		//spiSend(resetBuffer[i]);}
-	//Delay_ms(200);
 }}
 
